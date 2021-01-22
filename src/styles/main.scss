@@ -1,3 +1,88 @@
+$cell-size: 100px;
+$cell-gap: 1px;
+$cell-font: "Arial", sans-serif;
+$cell-font-size: 30px;
+$cell-color: #eee;
+$cell-color-hover: #ffbfcb;
+$cell-border: 1px solid;
+
+@mixin day {
+  width: $cell-size;
+  height: $cell-size;
+  line-height: $cell-size;
+  text-align: center;
+  background-color: $cell-color;
+  border: $cell-border;
+
+  &:hover {
+    transform: translateY(-20px);
+    background-color: $cell-color-hover;
+    transition: all 0.5s linear;
+    cursor: pointer;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font: $cell-font-size $cell-font;
+}
+
 body {
   margin: 0;
+}
+
+.calendar {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: $cell-gap;
+  width: ($cell-size + $cell-gap) * 7;
+  margin: $cell-size / 2 auto 0;
+
+  div {
+    @include day;
+  }
+
+  &-30 {
+    div:nth-last-child(-n+1) {
+      display: none;
+    }
+  }
+
+  &-29 {
+    div:nth-last-child(-n+2) {
+      display: none;
+    }
+  }
+
+  &-28 {
+    div:nth-last-child(-n+3) {
+      display: none;
+    }
+  }
+}
+
+@for $days from 1 through 31 {
+  .calendar div:nth-child(#{$days})::before {
+    content: "#{$days}";
+  }
+}
+
+$week: (
+  "mon": 0,
+  "tue": $cell-size + $cell-gap,
+  "wed": ($cell-size + $cell-gap)* 2 ,
+  "thu": ($cell-size + $cell-gap) * 3,
+  "fri": ($cell-size + $cell-gap) * 4,
+  "sat": ($cell-size + $cell-gap) * 5,
+  "sun": ($cell-size + $cell-gap) * 6
+);
+
+@each $day, $gap in $week {
+  .calendar-#{$day} div:first-child {
+    margin-left: $gap;
+  }
 }
